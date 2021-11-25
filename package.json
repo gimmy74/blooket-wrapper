@@ -1,6 +1,6 @@
 {
   "name": "blooket",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Blooket API wrapper",
   "main": "index.js",
   "scripts": {
