@@ -2,7 +2,26 @@
 
 Documentation for the node.js Blooket library
 
-### Functions
+## Documentation
+
+- [Basic Usage](https://github.com/glixzzy/blooket-wrapper/blob/main/Documention.md)
+- [Functions](https://github.com/glixzzy/blooket-wrapper/blob/main/Documention.md#functions)
+- [Events](https://github.com/glixzzy/blooket-wrapper/blob/main/Documention.md#examples)
+
+### Basic Usage
+```js
+const Blooket = require('blooket')
+
+const client = new Blooket();
+
+client.joinGame('342865', 'twst', 'Dog')
+
+client.on('Joined', data => {
+    console.log(`Joined game with name: ${data.name} \nJoined game with blook: ${data.blook}`)
+});
+```
+
+## Functions
 - **`addTokens(tokenAmount, xpAmount, blooketName, blooketAuthToken)`** - Adds tokens and XP to your account
 #### Parameters:
 | name | description |
@@ -210,7 +229,7 @@ client.on('gameData', data => {
 
 Example:
 ```js
-const Blooket = require('../index')
+const Blooket = require('blooket')
 
 const client = new Blooket();
 
@@ -232,7 +251,7 @@ client.on('Joined', data => {
 
 Example:
 ```js
-const Blooket = require('../index')
+const Blooket = require('blooket')
 
 const client = new Blooket();
 
@@ -252,3 +271,49 @@ client.on('accountData', data => {
     });
 });
 ```
+
+## Events
+
+`tokensAdded` - [addTokens()](https://github.com/glixzzy/blooket-wrapper/blob/main/Documention.md#parameters)
+
+- Emitted when then client adds tokens and XP to their account.
+
+`gameCreated` - [createGame()](https://github.com/glixzzy/blooket-wrapper/blob/main/Documention.md#parameters-1)
+
+- Emitted when the client creates a live game.
+    - Returns an `Object`
+
+`setCreated` - [createSet()](https://github.com/glixzzy/blooket-wrapper/blob/main/Documention.md#parameters-2)
+
+- Emitted when the client creates a set.
+    - Returns an `Object`
+
+`setDeleted` - [deleteSet()](https://github.com/glixzzy/blooket-wrapper/blob/main/Documention.md#parameters-3)
+
+- Emitted when the client deletes a set.
+    - Returns an `Object`
+
+`favorited` - [favoriteSet()](https://github.com/glixzzy/blooket-wrapper/blob/main/Documention.md#parameters-4)
+
+- Emitted when the client favorites a set.
+    - Returns an `Object`
+
+`flood` - [floodGames()](https://github.com/glixzzy/blooket-wrapper/blob/main/Documention.md#parameters-5)
+
+- Emitted when the client flood a game.
+    - Returns an `Object`
+
+
+`answers` - [getAnswers()](https://github.com/glixzzy/blooket-wrapper/blob/main/Documention.md#parameters-6)
+
+- Emitted when the client gets answers for a game.
+    - Returns an `Object` and `Array`
+
+`Joined` - [joinGame()](https://github.com/glixzzy/blooket-wrapper/blob/main/Documention.md#parameters-7)
+
+- Emitted when the client joins a game.
+    - Returns an `Object`
+
+`spamPlays` - [spamPlayGame()](https://github.com/glixzzy/blooket-wrapper/blob/main/Documention.md#parameters-8)
+
+- Emitted when the client spam plays a game.
