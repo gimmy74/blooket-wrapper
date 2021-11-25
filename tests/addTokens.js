@@ -1,19 +1,22 @@
-const Blooket = require('../index')
+const Blooket = require('../index');
 
 const client = new Blooket();
 
-const authToken = ""; // put your blooket auth token
+(async () => {
+    const login = client.login('myEmail@gmail.com', 'myPassword123');
+    const loginData = await login;
+    const authToken = loginData.token;
 
-client.getAccountData(authToken);
+    const account = client.getAccountData(authToken);
+    const accountData = await account;
+    const name = accountData.name;
 
-client.on('accountData', data => {
-    const name = data.name;
     const tokenAmount = 500;
     const xpAmount = 300;
 
-    client.addTokens(tokenAmount, xpAmount, name, authToken);
+    const addTokens = client.addTokens(tokenAmount, xpAmount, name, authToken);
+    const addTokensData = await addTokens;
 
-    client.on('tokensAdded', () => {
-        console.log(`${tokenAmount} tokens and ${xpAmount} XP added to your account!`);
-    });
-});
+    console.log(addTokensData);
+    console.log('Added ' + tokenAmount + ' tokens and ' + xpAmount + ' XP to your account.');
+})();

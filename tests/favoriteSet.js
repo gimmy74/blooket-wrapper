@@ -2,16 +2,19 @@ const Blooket = require('../index')
 
 const client = new Blooket();
 
-const authToken = ""; // put your blooket auth token
+(async () => {
+    const login = client.login('email', 'password');
+    const loginData = await login;
+    const authToken = loginData.token;
 
-client.getAccountData(authToken);
+    const account = client.getAccountData(authToken);
+    const accountData = await account;
+    const name = accountData.name;
 
-client.on('accountData', data => {
-    const name = data.name;
-
-    client.favoriteSet('600b1491d42a140004d5215a', name, authToken) //https://www.blooket.com/set/600b1491d42a140004d5215a
-
-    client.on('favorited', message => {
-        console.log('Favorited set: ' + message.set);
-    });
-});
+    const setId = "619ffa8f76a076b181439489";
+    
+    const favorite = client.favoriteSet(setId, name, authToken);
+    const favoriteData = await favorite;
+    
+    console.log(favoriteData);
+})();

@@ -2,18 +2,21 @@ const Blooket = require('../index')
 
 const client = new Blooket();
 
-const authToken = ""; // put your blooket auth token
+(async () => {
+    const login = client.login('email', 'password');
+    const loginData = await login;
+    const authToken = loginData.token;
 
-client.getAccountData(authToken);
-
-client.on('accountData', data => {
+    const account = client.getAccountData(authToken);
+    const accountData = await account;
     
-    const setId = "600b1491d42a140004d5215a"; // https://www.blooket.com/set/600b1491d42a140004d5215a
-    const accountName = data.name;
+    const setId = "619ffd8626263900c33b3db8";
+    const name = accountData.name;
 
-    client.spamPlayGame(setId, accountName, authToken, 100);
 
-    client.on('spamPlays', () => {
-        console.log('Game played!')
+    client.spamPlayGame(setId, name, authToken, 100);
+
+    client.on('spamPlays', data => {
+        console.log('Played game: ' + data.setId);
     });
-});
+})();

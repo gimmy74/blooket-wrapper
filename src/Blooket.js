@@ -6,6 +6,8 @@ const crypto = require('crypto');
 const messages = require('./assets/messages');
 const utils = require('./assets/links');
 
+const APIResponseMessages = require('./errors/APIResponseErrors');
+
 const { checkPinType } = require('./errors/typeofs');
 
 const findSocketUri = require('./modules/findSocket');
@@ -79,13 +81,15 @@ class Blooket extends EventEmitter {
         };
     };
 
-    async createGame(hostName, isPlus, qSetId, newDateString, t_a /* t_a = Time or Amount*/, gameMode, authToken) {
+    async createGame(hostName, isPlus, qSetId, t_a /* t_a = Time or Amount*/, gameMode, authToken) {
+        const newDateISOString = new Date().toISOString();
+
         const createGameResponse = await axios.post(utils.links.live, {
             hoster: hostName,
             plus: isPlus,
             qSetId: qSetId,
             settings: {
-                d: newDateString,
+                d: newDateISOString,
                 la: true,
                 m: t_a,
                 t: gameMode,
@@ -111,11 +115,11 @@ class Blooket extends EventEmitter {
 
             ws.on('open', () => {
                 ws.send(messages.authorize(verifyTokenReponse.data.idToken));
-                ws.send(JSON.stringify({ "t": "d", "d": { "r": 3, "a": "p", "b": { "p": "/" + createGameResponse.data.id, "d": { "ho": hostName, "p": isPlus, "s": { "d": newDateString, "la": true, "m": t_a, "t": gameMode }, "set": qSetId, "stg": "join" } } } }))
+                ws.send(JSON.stringify({ "t": "d", "d": { "r": 3, "a": "p", "b": { "p": "/" + createGameResponse.data.id, "d": { "ho": hostName, "p": isPlus, "s": { "d": newDateISOString, "la": true, "m": t_a, "t": gameMode }, "set": qSetId, "stg": "join" } } } }))
             });
         });
 
-        const data = createGameResponse.data.id;
+        const data = { gamePin: createGameResponse.data.id };
 
         this.emit('gameCreated', data);
     };
@@ -125,9 +129,7 @@ class Blooket extends EventEmitter {
 
         const response = await axios(utils.links.verifyAcc + modifiedAuthToken);
 
-        const message = response.data
-
-        this.emit('accountData', message);
+        return response.data
     };
 
     async getGameData(gamePin) {
@@ -147,10 +149,7 @@ class Blooket extends EventEmitter {
                 }
             });
 
-            const message = response.data
-
-            this.emit('gameData', message);
-
+            return response.data
         } else {
             throw new Error('Invalid Game Pin provided');
         };
@@ -163,36 +162,37 @@ class Blooket extends EventEmitter {
             },
         });
 
-        response.data.questions.forEach(question => {
-            const data = {
-                question: question.question,
-                answer: question.correctAnswers,
-            };
+        const data = [];
 
-            this.emit('answers', data);
+        response.data.questions.forEach(quetsion => {
+            data.push("Question: " + quetsion.question + " | Answer: " + quetsion.correctAnswers)
         });
+
+        return data
     };
 
     async spamPlayGame(setId, name, authToken, amount) {
-
         for (let i = 0; i < amount; i++) {
-            const response = await axios.post(utils.links.history, {
-                "standings": [{}],
-                "settings": {},
-                "set": "",
-                "setId": setId,
-                "name": name,
-            }, {
-                headers: {
-                    authorization: authToken
-                },
-            });
+            try {
+                await axios.post(utils.links.history, {
+                    "standings": [{}],
+                    "settings": {},
+                    "set": "",
+                    "setId": setId,
+                    "name": name,
+                }, {
+                    headers: {
+                        authorization: authToken
+                    },
+                });
 
-            if (response.status != 200) {
-                console.log('An error occured');
+                this.emit('spamPlays', { setId: setId });
+            } catch (e) {
+                if (e.response.data == APIResponseMessages.historyAPI.MSG) {
+                    console.log(APIResponseMessages.historyAPI.MSG);
+                    break;
+                };
             };
-
-            this.emit('spamPlays');
         };
     };
 
@@ -200,7 +200,7 @@ class Blooket extends EventEmitter {
         const checkIfFavorited = await isFavorited(setId, authToken);
 
         if (checkIfFavorited == false) {
-            await axios.put(utils.links.favorite, {
+            const response = await axios.put(utils.links.favorite, {
                 id: setId,
                 isUnfavoriting: false,
                 name: name,
@@ -210,7 +210,7 @@ class Blooket extends EventEmitter {
                 },
             });
 
-            this.emit('favorited', { set: setId });
+            return response.data
         } else {
             throw new Error('You already have this game favorited!');
         };
@@ -229,27 +229,11 @@ class Blooket extends EventEmitter {
             },
         });
 
-        this.emit('setCreated', response.data);
-    };
-
-    async deleteSet(setId, authToken) {
-        try {
-            const response = await axios.delete(utils.links.gameQuery + setId, {}, {
-                headers: {
-                    authorization: authToken,
-                },
-            });
-
-            this.emit('setDeleted', response.data);
-        } catch (e) {
-            if (e.response.status != 200) {
-                throw new Error("You don't own this set!");
-            };
-        };
+        return response.data
     };
 
     async addTokens(tokenAmount, xpAmount, name, authToken) {
-        await axios.put(utils.links.rewards, {
+        const response = await axios.put(utils.links.rewards, {
             addedTokens: tokenAmount,
             addedXp: xpAmount,
             name: name,
@@ -259,7 +243,26 @@ class Blooket extends EventEmitter {
             }
         });
 
-        this.emit('tokensAdded');
+        return response.data
+    };
+
+    async login(email, password) {
+        const response = await axios.post(utils.links.login, {
+            name: email,
+            password: password,
+        }, {
+            headers: {
+                Referer: 'https://www.blooket.com/',
+            },
+        });
+
+        if (response.data.errType == APIResponseMessages.login.errType.MSG_EMAIL) {
+            throw new Error(APIResponseMessages.login.MSG_E);
+        } else if (response.data.errType == APIResponseMessages.login.errType.MSG_PASSWORD) {
+            throw new Error(APIResponseMessages.login.MSG);
+        };
+
+        return response.data
     };
 
     /* Global End */

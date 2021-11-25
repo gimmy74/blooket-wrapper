@@ -9,6 +9,7 @@ module.exports = {
         isFavorited: "https://api.blooket.com/api/users/favorited?id=",
         favorite: "https://api.blooket.com/api/users/updatefavorites",
         games: "https://api.blooket.com/api/games",
-        gameQuery: "https://api.blooket.com/api/games?gameId="
+        gameQuery: "https://api.blooket.com/api/games?gameId=",
+        login: "https://api.blooket.com/api/users/login"
     },
 };

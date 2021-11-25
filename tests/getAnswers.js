@@ -2,14 +2,18 @@ const Blooket = require('../index')
 
 const client = new Blooket();
 
-client.getGameData('223669');
+(async () => {
+    const gamePin = "198804";
 
-client.on('gameData', data => {
-    const setId = data.host.set
+    const game = client.getGameData(gamePin)
+    const gameData = await game;
 
-    client.getAnswers(setId);
+    const set = gameData.host.set;
+
+    const answers = client.getAnswers(set);
+    const answersData = await answers;
     
-    client.on('answers', message => {
-        console.log('Question: ' + message.question + ' | Answer: ' + message.answer[0]);
+    answersData.forEach(data => {
+        console.log(data);
     });
-});
+})();

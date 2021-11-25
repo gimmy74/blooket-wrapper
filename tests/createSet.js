@@ -2,19 +2,21 @@ const Blooket = require('../index')
 
 const client = new Blooket();
 
-const authToken = ""; // put your blooket auth token
+(async () => {
+    const login = client.login('email', 'passwod');
+    const loginData = await login;
+    const authToken = loginData.token;
 
-client.getAccountData(authToken);
+    const account = client.getAccountData(authToken);
+    const accountData = await account;
 
-client.on('accountData', data => {
-    const author = data.name;
+    const author = accountData.name;
     const desc = 'created from nodejs';
     const isPrivate = false;
     const title = 'created from nodejs';
 
-    client.createSet(author, desc, isPrivate, title, authToken);
+    const set = client.createSet(author, desc, isPrivate, title, authToken);
+    const setData = await set;
 
-    client.on('setCreated', message => {
-        console.log(message);
-    });
-});
+    console.log(setData);    
+})();
