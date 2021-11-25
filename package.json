@@ -13,5 +13,17 @@
     "crypto": "^1.0.1",
     "events": "^3.3.0",
     "ws": "^8.2.3"
-  }
+  },
+  "keywords": [
+    "Blooket",
+    "Blooket API wrapper",
+    "Blooket hack",
+    "Blooket docs",
+    "Blooket API docs",
+    "Blooket nodejs",
+    "Blooket.js",
+    "blooket js",
+    "blooket api",
+    "blooket api docs"
+  ]
 }
