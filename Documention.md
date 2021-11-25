@@ -279,6 +279,8 @@ client.on('accountData', data => {
 |*gamePin*|Game pin used to join a game with - **String**|
 |*playName*|Player name to give gold to - **String**|
 
+**Note: This function only works for gold quest game mode!**
+
 Example:
 ```js
 const Blooket = require('blooket');
@@ -299,6 +301,8 @@ client.on('goldGiven', data => {
 |*gamePin*|Game pin used to join a game with - **String**|
 |*playName*|Player name to steal gold from - **String**|
 
+**Note: This function only works for gold quest game mode!**
+
 Example:
 ```js
 const Blooket = require('blooket');
@@ -317,6 +321,8 @@ client.on('goldStolen', data => {
 | name | description |
 |-|-|
 |*gamePin*|Game pin used to join a game with - **String**|
+
+**Note: This function only works for racing game mode!**
 
 Example:
 ```js
@@ -376,3 +382,18 @@ client.on('gameEnded', data => {
 `spamPlays` - [spamPlayGame()](https://github.com/glixzzy/blooket-wrapper/blob/main/Documention.md#parameters-8)
 
 - Emitted when the client spam plays a game.
+
+`goldGiven` - [giveGold()](https://github.com/glixzzy/blooket-wrapper/blob/main/Documention.md#parameters-9)
+
+- Emitted when the client gives gold to a user.
+    - Returns an `Object`
+
+`goldStolen` - [stealGold()](https://github.com/glixzzy/blooket-wrapper/blob/main/Documention.md#parameters-10)
+
+- Emitted when the client steal gold from a player.
+    - Returns an `Object`
+
+`gameEnded` - [endGame()](https://github.com/glixzzy/blooket-wrapper/blob/main/Documention.md#parameters-11)
+
+- Emitted when the client ends a game.
+    - Returns an `Object`
