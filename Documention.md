@@ -1,121 +1,254 @@
-# Features
-- Add Tokens
-- Create Game
-- Create Set
-- Delete Set 
-- Favorite Set
-- Flood Games
-- Get Answers
-- Join Game
-- Spam Plays
+# blooket
 
-    - Gold
-        - Give Gold
-        - Steal Gold
-    - Racing
-        - End Game
+Documentation for the node.js Blooket library
 
-# Documentation
+### Functions
+- **`addTokens(tokenAmount, xpAmount, blooketName, blooketAuthToken)`** - Adds tokens and XP to your account
+#### Parameters:
+| name | description |
+|-|-|
+|*tokenAmount*|Amount of tokens you want (max 500 allowed) - **Number**|
+|*xpAmount*|Amount of XP you want (max 300 allowed) - **Number**|
+|*blooketName*|Your Blooket account name - **String**|
+|*blooketAuthToken*|Your auth token is like your login info - **String**|
 
-**Installing**:
+Example:
+```js
+const Blooket = require('blooket')
 
-Run `npm install blooket`
+const client = new Blooket();
 
-## Functions
-- `addTokens(tokenAmount, xpAmount, blooketName, blooketAuthToken)`
+const authToken = ""; // put your blooket auth token
 
-    ##### Description: This function adds tokens and XP to your Blooket account.
+client.getAccountData(authToken);
 
-`tokenAmount` - Integer
+client.on('accountData', data => {
+    const name = data.name;
+    const tokenAmount = 500;
+    const xpAmount = 300;
 
-`xpAmount` - Integer
+    client.addTokens(tokenAmount, xpAmount, name, authToken);
 
-`blooketName` - String
+    client.on('tokensAdded', () => {
+        console.log(`${tokenAmount} tokens and ${xpAmount} XP added to your account!`);
+    });
+});
+```
 
-`blooketAuthToken` - String
+- **`createGame(hostName, isPlus, gameSetId, newDateISOString, t_a, gameMode, blooketAuthToken)`**
+### Parameters:
+| name | description |
+|-|-|
+|*hostName*|Your Blooket Name - **String**|
+|*isPlus*|Does your Blooket account have plus? - **`true` or `false`**|
+|*gameSetId*|game set Id used to create a game - **String**|
+|*newDateISOString*|new date turned into a ISOString - **String**|
+|*t_a*|t = Time or a = Amount - **`Time` or `Amount`**|
+|*blooketAuthToken*|Your auth token is like your login info - **String**|
 
-- `createGame(hostName, isPlus, gameSetId, dateISOString, t_a, gameMode, blooketAuthToken)`
+Example:
+```js
+const Blooket = require('blooket');
 
-    ##### Description: This function creates a live game on Blooket.
+const client = new Blooket();
 
-`hostName` - String
+const authToken = "" /* put your blooket auth token */
 
-`isPlus` - `true` or `false`
+client.getAccountData(authToken);
 
-`gameSetId` - String
+client.on('accountData', message => {
+    const hostName = message.name
+    const isPlus = message.plan == 'Starter' ? false : true
+    const gameSetId = "600b1491d42a140004d5215a"
+    const newDateISOString = new Date().toISOString();
 
-`dateISOString` - String
+    client.createGame(hostName, isPlus, gameSetId, newDateISOString, 'Time', 'Gold', authToken)
 
-`t_a` - `Time` or `Amount`
+    client.on('gameCreated', data => {
+        console.log("Game Created: " + data)
+    });
+});
+```
 
-`gameMode` - String
+- **`createSet(authorName, description, isPrivate, title, blooketAuthToken)`**
+### Parameters:
+| name | description |
+|-|-|
+|*authorName*|Your Blooket name - **String**|
+|*description*|Write description about the game set - **String**|
+|*isPrivate*|Set your game to private - **`true` or `false`**|
+|*title*|Set a title for your game set - **String**|
+|*blooketAuthToken*|Your auth token is like your login info - **String**|
 
-`blooketAuthToken` - String
+Example:
+```js
+const Blooket = require('blooket')
 
-- `createSet(authorName, description, isPrivate, title, blooketAuthToken)`
+const client = new Blooket();
 
-    ##### Description: This function creates a game set on Blooket.
+const authToken = ""; // put your blooket auth token
 
-`authorName` - String
+client.getAccountData(authToken);
 
-`description` - String
+client.on('accountData', data => {
+    const author = data.name;
+    const desc = 'created from nodejs';
+    const isPrivate = false;
+    const title = 'created from nodejs';
 
-`isPrivate` - `true` or `false`
+    client.createSet(author, desc, isPrivate, title, authToken);
 
-`title` - String
+    client.on('setCreated', message => {
+        console.log(message);
+    });
+});
+```
 
-`blooketAuthToken` - String
+- **``deleteSet(setId, blooketAuthToken)``**
+### Parameters:
+| name | description |
+|-|-|
+|*setId*|Game set Id - **String**|
+|*blooketAuthToken*|Your auth token is like your login info - **String**|
 
-- `deleteSet(setId, blooketAuthToken)`
+Example:
+```js
+const Blooket = require('blooket')
 
-    ##### Description: This function deletes a game set on Blooket.
+const client = new Blooket();
 
-`setId` - String
+const authToken = ""; // put your blooket auth token
 
-`blooketAuthToken` - String
+client.deleteSet('5fda2c0b4736cc0004ac931f', authToken);
 
-- `favoriteSet(setId, blooketName, blooketAuthToken)`
+client.on('setDeleted', data => {
+    console.log(data)
+})
+```
 
-    ##### Description: This function favorites a game set on Blooket.
+- **``favoriteSet(setId, blooketName, blooketAuthToken)``**
+### Parameters:
+| name | description |
+|-|-|
+|*setId*|Game set Id - **String**|
+|*blooketName*|Your Blooket account name - **String**|
+|*blooketAuthToken*|Your auth token is like your login info - **String**|
 
-`setId` - String
+Example:
+```js
+const Blooket = require('blooket')
 
-`blooketName` - String
+const client = new Blooket();
 
-`blooketAuthToken` - String
+const authToken = ""; // put your blooket auth token
 
-- `floodGames(gamePin, amount)`
+client.getAccountData(authToken);
 
-    ##### Description: This function floods a game with bots.
+client.on('accountData', data => {
+    const name = data.name;
 
-`gamePin` - String
+    client.favoriteSet('600b1491d42a140004d5215a', name, authToken) //https://www.blooket.com/set/600b1491d42a140004d5215a
 
-`amount` - Integer
+    client.on('favorited', message => {
+        console.log('Favorited set: ' + message.set);
+    });
+});
+```
 
-- `getAnswers(setId)`
+- **``floodGames(gamePin, amount)``**
+### Parameters:
+| name | description |
+|-|-|
+|*gamePin*|Game pin to join a game - **String**|
+|*amount*|Amount of bots you want to send - **Number**|
 
-    ##### Description: This function gets all the answers for a live game.
+Example:
+```js
+const Blooket = require('blooket')
 
-`setId` - String
+const client = new Blooket();
 
-- `joinGame(gamePin, botName, blook)`
+client.floodGames('972506', 100);
 
-    ##### Description: This function joins a live game.
+client.on('flood', data => {
+    console.log('Joined game with name: ' + data.player);
+});
+```
 
-`gamePin` - String
+- **`getAnswers(setId)`**
+### Parameters:
+| name | description |
+|-|-|
+|*setId*|Game set Id - **String**|
 
-`botName` - String
+Example:
+```js
+const Blooket = require('blooket')
 
-`blooket` - String
+const client = new Blooket();
 
-- `spamPlayGames(setId, blooketName, blooketAuthToken, amount)`
+client.getGameData('223669');
 
-    ##### Description: This function mass plays a game.
+client.on('gameData', data => {
+    const setId = data.host.set
 
-`setId` - String
+    client.getAnswers(setId);
+    
+    client.on('answers', message => {
+        console.log('Question: ' + message.question + ' | Answer: ' + message.answer[0]);
+    });
+});
+```
 
-`blooketName` - String
+- **`joinGame(gamePin, botName, blook)`**
+### Parameters:
+| name | description |
+|-|-|
+|*gamePin*|Game pin used to join a game - **String**|
+|*botName*|Bot name used to join a game - **String**|
+|*blook*|Blook used to play a game - **String**|
 
-`blooketAuthToken` - String
+Example:
+```js
+const Blooket = require('../index')
 
-`amount` - Integer
+const client = new Blooket();
+
+client.joinGame('342865', 'twst', 'Dog')
+
+client.on('Joined', data => {
+    console.log(`Joined game with name: ${data.name} \nJoined game with blook: ${data.blook}`)
+});
+```
+
+- **`spamPlayGame(setId, blooketName, blooketAuthToken, amount)`**
+### Parameters:
+| name | description |
+|-|-|
+|*setId*|Game set Id - **String**|
+|*blooketName*|Your Blooket account name - **String**|
+|*blooketAuthToken*|Your auth token is like your login info - **String**|
+|*amount*|Amount of bots you want to send - **Number**|
+
+Example:
+```js
+const Blooket = require('../index')
+
+const client = new Blooket();
+
+const authToken = ""; // put your blooket auth token
+
+client.getAccountData(authToken);
+
+client.on('accountData', data => {
+    
+    const setId = "600b1491d42a140004d5215a"; // https://www.blooket.com/set/600b1491d42a140004d5215a
+    const accountName = data.name;
+
+    client.spamPlayGame(setId, accountName, authToken, 100);
+
+    client.on('spamPlays', () => {
+        console.log('Game played!')
+    });
+});
+```
