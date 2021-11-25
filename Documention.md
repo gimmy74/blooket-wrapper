@@ -33,35 +33,37 @@ client.on('Joined', data => {
 
 Example:
 ```js
-const Blooket = require('blooket')
+const Blooket = require('blooket');
 
 const client = new Blooket();
 
-const authToken = ""; // put your blooket auth token
+(async () => {
+    const login = client.login('myEmail@gmail.com', 'myPassword123');
+    const loginData = await login;
+    const authToken = loginData.token;
 
-client.getAccountData(authToken);
+    const account = client.getAccountData(authToken);
+    const accountData = await account;
+    const name = accountData.name;
 
-client.on('accountData', data => {
-    const name = data.name;
     const tokenAmount = 500;
     const xpAmount = 300;
 
-    client.addTokens(tokenAmount, xpAmount, name, authToken);
+    const addTokens = client.addTokens(tokenAmount, xpAmount, name, authToken);
+    const addTokensData = await addTokens;
 
-    client.on('tokensAdded', () => {
-        console.log(`${tokenAmount} tokens and ${xpAmount} XP added to your account!`);
-    });
-});
+    console.log(addTokensData);
+    console.log('Added ' + tokenAmount + ' tokens and ' + xpAmount + ' XP to your account.');
+})();
 ```
 
-- **`createGame(hostName, isPlus, gameSetId, newDateISOString, t_a, gameMode, blooketAuthToken)`**
+- **`createGame(hostName, isPlus, gameSetId, t_a, gameMode, blooketAuthToken)`**
 ### Parameters:
 | name | description |
 |-|-|
 |*hostName*|Your Blooket Name - **String**|
 |*isPlus*|Does your Blooket account have plus? - **`true` or `false`**|
 |*gameSetId*|game set Id used to create a game - **String**|
-|*newDateISOString*|new date turned into a ISOString - **String**|
 |*t_a*|t = Time or a = Amount - **`Time` or `Amount`**|
 |*blooketAuthToken*|Your auth token is like your login info - **String**|
 
@@ -71,22 +73,24 @@ const Blooket = require('blooket');
 
 const client = new Blooket();
 
-const authToken = "" /* put your blooket auth token */
+(async () => {
+    const login = client.login('myemail@gmail.com', 'mypasssowrd123');
+    const loginData = await login;
+    const authToken = loginData.token;
 
-client.getAccountData(authToken);
+    const account = client.getAccountData(authToken);
+    const accountData = await account;
 
-client.on('accountData', message => {
-    const hostName = message.name
-    const isPlus = message.plan == 'Starter' ? false : true
-    const gameSetId = "600b1491d42a140004d5215a"
-    const newDateISOString = new Date().toISOString();
+    const hostName = accountData.name;
+    const isPlus = accountData.plus == "Starter" ? false : true;
+    const gameSetId = "600b1491d42a140004d5215a"; //https://www.blooket.com/set/600b1491d42a140004d5215a
 
-    client.createGame(hostName, isPlus, gameSetId, newDateISOString, 'Time', 'Gold', authToken)
+    client.createGame(hostName, isPlus, gameSetId, 'Time', 'Gold', authToken);
 
     client.on('gameCreated', data => {
-        console.log("Game Created: " + data)
+        console.log('Game created: ' + data.gamePin);
     });
-});
+})();
 ```
 
 - **`createSet(authorName, description, isPrivate, title, blooketAuthToken)`**
@@ -105,44 +109,24 @@ const Blooket = require('blooket')
 
 const client = new Blooket();
 
-const authToken = ""; // put your blooket auth token
+(async () => {
+    const login = client.login('email', 'passwod');
+    const loginData = await login;
+    const authToken = loginData.token;
 
-client.getAccountData(authToken);
+    const account = client.getAccountData(authToken);
+    const accountData = await account;
 
-client.on('accountData', data => {
-    const author = data.name;
+    const author = accountData.name;
     const desc = 'created from nodejs';
     const isPrivate = false;
     const title = 'created from nodejs';
 
-    client.createSet(author, desc, isPrivate, title, authToken);
+    const set = client.createSet(author, desc, isPrivate, title, authToken);
+    const setData = await set;
 
-    client.on('setCreated', message => {
-        console.log(message);
-    });
-});
-```
-
-- **``deleteSet(setId, blooketAuthToken)``**
-### Parameters:
-| name | description |
-|-|-|
-|*setId*|Game set Id - **String**|
-|*blooketAuthToken*|Your auth token is like your login info - **String**|
-
-Example:
-```js
-const Blooket = require('blooket')
-
-const client = new Blooket();
-
-const authToken = ""; // put your blooket auth token
-
-client.deleteSet('5fda2c0b4736cc0004ac931f', authToken);
-
-client.on('setDeleted', data => {
-    console.log(data)
-})
+    console.log(setData);    
+})();
 ```
 
 - **``favoriteSet(setId, blooketName, blooketAuthToken)``**
@@ -159,19 +143,22 @@ const Blooket = require('blooket')
 
 const client = new Blooket();
 
-const authToken = ""; // put your blooket auth token
+(async () => {
+    const login = client.login('email', 'password');
+    const loginData = await login;
+    const authToken = loginData.token;
 
-client.getAccountData(authToken);
+    const account = client.getAccountData(authToken);
+    const accountData = await account;
+    const name = accountData.name;
 
-client.on('accountData', data => {
-    const name = data.name;
-
-    client.favoriteSet('600b1491d42a140004d5215a', name, authToken) //https://www.blooket.com/set/600b1491d42a140004d5215a
-
-    client.on('favorited', message => {
-        console.log('Favorited set: ' + message.set);
-    });
-});
+    const setId = "619ffa8f76a076b181439489";
+    
+    const favorite = client.favoriteSet(setId, name, authToken);
+    const favoriteData = await favorite;
+    
+    console.log(favoriteData);
+})();
 ```
 
 - **``floodGames(gamePin, amount)``**
@@ -206,17 +193,21 @@ const Blooket = require('blooket')
 
 const client = new Blooket();
 
-client.getGameData('223669');
+(async () => {
+    const gamePin = "198804";
 
-client.on('gameData', data => {
-    const setId = data.host.set
+    const game = client.getGameData(gamePin)
+    const gameData = await game;
 
-    client.getAnswers(setId);
+    const set = gameData.host.set;
+
+    const answers = client.getAnswers(set);
+    const answersData = await answers;
     
-    client.on('answers', message => {
-        console.log('Question: ' + message.question + ' | Answer: ' + message.answer[0]);
+    answersData.forEach(data => {
+        console.log(data);
     });
-});
+})();
 ```
 
 - **`joinGame(gamePin, botName, blook)`**
@@ -277,21 +268,24 @@ const Blooket = require('blooket')
 
 const client = new Blooket();
 
-const authToken = ""; // put your blooket auth token
+(async () => {
+    const login = client.login('email', 'password');
+    const loginData = await login;
+    const authToken = loginData.token;
 
-client.getAccountData(authToken);
-
-client.on('accountData', data => {
+    const account = client.getAccountData(authToken);
+    const accountData = await account;
     
-    const setId = "600b1491d42a140004d5215a"; // https://www.blooket.com/set/600b1491d42a140004d5215a
-    const accountName = data.name;
+    const setId = "619ffd8626263900c33b3db8";
+    const name = accountData.name;
 
-    client.spamPlayGame(setId, accountName, authToken, 100);
 
-    client.on('spamPlays', () => {
-        console.log('Game played!')
+    client.spamPlayGame(setId, name, authToken, 100);
+
+    client.on('spamPlays', data => {
+        console.log('Played game: ' + data.setId);
     });
-});
+})();
 ```
 
 - **``giveGold(gamePin, playerName)``**
@@ -360,41 +354,15 @@ client.on('gameEnded', data => {
 ```
 
 ## Events
-
-`tokensAdded` - [addTokens()](https://github.com/glixzzy/blooket-wrapper/blob/main/Documention.md#parameters)
-
-- Emitted when then client adds tokens and XP to their account.
-
 `gameCreated` - [createGame()](https://github.com/glixzzy/blooket-wrapper/blob/main/Documention.md#parameters-1)
 
 - Emitted when the client creates a live game.
-    - Returns an `Object`
-
-`setCreated` - [createSet()](https://github.com/glixzzy/blooket-wrapper/blob/main/Documention.md#parameters-2)
-
-- Emitted when the client creates a set.
-    - Returns an `Object`
-
-`setDeleted` - [deleteSet()](https://github.com/glixzzy/blooket-wrapper/blob/main/Documention.md#parameters-3)
-
-- Emitted when the client deletes a set.
-    - Returns an `Object`
-
-`favorited` - [favoriteSet()](https://github.com/glixzzy/blooket-wrapper/blob/main/Documention.md#parameters-4)
-
-- Emitted when the client favorites a set.
     - Returns an `Object`
 
 `flood` - [floodGames()](https://github.com/glixzzy/blooket-wrapper/blob/main/Documention.md#parameters-5)
 
 - Emitted when the client flood a game.
     - Returns an `Object`
-
-
-`answers` - [getAnswers()](https://github.com/glixzzy/blooket-wrapper/blob/main/Documention.md#parameters-6)
-
-- Emitted when the client gets answers for a game.
-    - Returns an `Object` and `Array`
 
 `Joined` - [joinGame()](https://github.com/glixzzy/blooket-wrapper/blob/main/Documention.md#parameters-7)
 
