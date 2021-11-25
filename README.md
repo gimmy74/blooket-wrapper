@@ -3,6 +3,7 @@
 A node.js wrapper for the Blooket API
 
 # Usage
+
 ```js
 const Blooket = require('blooket');
 
