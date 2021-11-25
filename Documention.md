@@ -272,6 +272,65 @@ client.on('accountData', data => {
 });
 ```
 
+- **``giveGold(gamePin, playerName)``**
+### Parameters:
+| name | description |
+|-|-|
+|*gamePin*|Game pin used to join a game with - **String**|
+|*playName*|Player name to give gold to - **String**|
+
+Example:
+```js
+const Blooket = require('blooket');
+
+const client = new Blooket();
+
+client.giveGold('189789', 'glizzy');
+
+client.on('goldGiven', data => {
+    console.log('Gold given to player: ' + data.player);
+});
+```
+
+- **``stealGold(gamePin, playerName)``**
+### Parameters:
+| name | description |
+|-|-|
+|*gamePin*|Game pin used to join a game with - **String**|
+|*playName*|Player name to steal gold from - **String**|
+
+Example:
+```js
+const Blooket = require('blooket');
+
+const client = new Blooket();
+
+client.stealGold('773710', 'glixzzy');
+
+client.on('goldStolen', data => {
+    console.log('Gold stolen from player: ' + data.player);
+});
+```
+
+- **``endGame(gamePin)``**
+### Parameters:
+| name | description |
+|-|-|
+|*gamePin*|Game pin used to join a game with - **String**|
+
+Example:
+```js
+const Blooket = require('blooket');
+
+const client = new Blooket();
+
+client.endGame('861432');
+
+client.on('gameEnded', data => {
+    console.log('Ended game: ' + data.pin);
+});
+```
+
 ## Events
 
 `tokensAdded` - [addTokens()](https://github.com/glixzzy/blooket-wrapper/blob/main/Documention.md#parameters)
