@@ -240,6 +240,28 @@ client.on('Joined', data => {
 });
 ```
 
+- **``login(email, password)``**
+### Parameters:
+| name | description |
+|-|-|
+|*email*|you can either put your blooket email or username to login - **String**|
+|*password*|password used to logging into your blooket account - **String**|
+
+Example:
+```js
+const Blooket = require('blooket')
+
+const client = new Blooket();
+
+(async () => {
+    const login = client.login('myemail@gmail.com', 'MyPassword123');
+
+    const authToken = await login;
+
+    console.log(authToken.token);
+})();
+```
+
 - **`spamPlayGame(setId, blooketName, blooketAuthToken, amount)`**
 ### Parameters:
 | name | description |
