@@ -14,5 +14,5 @@ const client = new Blooket();
     
     const favorite = await client.favoriteSet(setId, name, authToken);
     
-    console.log(favoriteData);
+    console.log(favorite);
 })();
