@@ -38,21 +38,18 @@ const Blooket = require('blooket');
 const client = new Blooket();
 
 (async () => {
-    const login = client.login('myEmail@gmail.com', 'myPassword123');
-    const loginData = await login;
-    const authToken = loginData.token;
+    const login = await client.login('myEmail@gmail.com', 'myPassword123');
+    const authToken = login.token;
 
-    const account = client.getAccountData(authToken);
-    const accountData = await account;
-    const name = accountData.name;
+    const account = await client.getAccountData(authToken);
+    const name = account.name;
 
     const tokenAmount = 500;
     const xpAmount = 300;
 
-    const addTokens = client.addTokens(tokenAmount, xpAmount, name, authToken);
-    const addTokensData = await addTokens;
+    const addTokens = await client.addTokens(tokenAmount, xpAmount, name, authToken);
 
-    console.log(addTokensData);
+    console.log(addTokens);
     console.log('Added ' + tokenAmount + ' tokens and ' + xpAmount + ' XP to your account.');
 })();
 ```
@@ -74,15 +71,13 @@ const Blooket = require('blooket');
 const client = new Blooket();
 
 (async () => {
-    const login = client.login('myemail@gmail.com', 'mypasssowrd123');
-    const loginData = await login;
-    const authToken = loginData.token;
+    const login = await client.login('myemail@gmail.com', 'mypasssowrd123');
+    const authToken = login.token;
 
-    const account = client.getAccountData(authToken);
-    const accountData = await account;
+    const account = await client.getAccountData(authToken);
 
-    const hostName = accountData.name;
-    const isPlus = accountData.plus == "Starter" ? false : true;
+    const hostName = account.name;
+    const isPlus = account.plus == "Starter" ? false : true;
     const gameSetId = "600b1491d42a140004d5215a"; //https://www.blooket.com/set/600b1491d42a140004d5215a
 
     client.createGame(hostName, isPlus, gameSetId, 'Time', 'Gold', authToken);
@@ -110,22 +105,19 @@ const Blooket = require('blooket')
 const client = new Blooket();
 
 (async () => {
-    const login = client.login('email', 'passwod');
-    const loginData = await login;
-    const authToken = loginData.token;
+    const login = await client.login('email', 'passwod');
+    const authToken = login.token;
 
-    const account = client.getAccountData(authToken);
-    const accountData = await account;
+    const account = await client.getAccountData(authToken);
 
-    const author = accountData.name;
+    const author = account.name;
     const desc = 'created from nodejs';
     const isPrivate = false;
     const title = 'created from nodejs';
 
-    const set = client.createSet(author, desc, isPrivate, title, authToken);
-    const setData = await set;
+    const set = await client.createSet(author, desc, isPrivate, title, authToken);
 
-    console.log(setData);    
+    console.log(set);    
 })();
 ```
 
@@ -144,20 +136,18 @@ const Blooket = require('blooket')
 const client = new Blooket();
 
 (async () => {
-    const login = client.login('email', 'password');
-    const loginData = await login;
-    const authToken = loginData.token;
+    const login = await client.login('email', 'password');
+    const authToken = login.token;
 
-    const account = client.getAccountData(authToken);
-    const accountData = await account;
-    const name = accountData.name;
+    const account = await client.getAccountData(authToken);
+    
+    const name = account.name;
 
     const setId = "619ffa8f76a076b181439489";
     
-    const favorite = client.favoriteSet(setId, name, authToken);
-    const favoriteData = await favorite;
+    const favorite = await client.favoriteSet(setId, name, authToken);
     
-    console.log(favoriteData);
+    console.log(favorite);
 })();
 ```
 
@@ -196,16 +186,14 @@ const client = new Blooket();
 (async () => {
     const gamePin = "198804";
 
-    const game = client.getGameData(gamePin)
-    const gameData = await game;
+    const game = await client.getGameData(gamePin)
 
-    const set = gameData.host.set;
+    const set = game.host.set;
 
-    const answers = client.getAnswers(set);
-    const answersData = await answers;
+    const answers = await client.getAnswers(set);
     
-    answersData.forEach(data => {
-        console.log(data);
+    answers.forEach(answer => {
+        console.log(answer);
     });
 })();
 ```
@@ -245,11 +233,9 @@ const Blooket = require('blooket')
 const client = new Blooket();
 
 (async () => {
-    const login = client.login('myemail@gmail.com', 'MyPassword123');
+    const login = await client.login('myemail@gmail.com', 'MyPassword123');
 
-    const authToken = await login;
-
-    console.log(authToken.token);
+    console.log(login.token);
 })();
 ```
 
@@ -269,15 +255,13 @@ const Blooket = require('blooket')
 const client = new Blooket();
 
 (async () => {
-    const login = client.login('email', 'password');
-    const loginData = await login;
-    const authToken = loginData.token;
+    const login = await client.login('email', 'password');
+    const authToken = login.token;
 
-    const account = client.getAccountData(authToken);
-    const accountData = await account;
+    const account = await client.getAccountData(authToken);
     
     const setId = "619ffd8626263900c33b3db8";
-    const name = accountData.name;
+    const name = account.name;
 
 
     client.spamPlayGame(setId, name, authToken, 100);
