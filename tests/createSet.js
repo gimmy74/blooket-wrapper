@@ -13,8 +13,7 @@ const client = new Blooket();
     const isPrivate = false;
     const title = 'created from nodejs';
 
-    const set = client.createSet(author, desc, isPrivate, title, authToken);
-    const setData = await set;
+    const set = await client.createSet(author, desc, isPrivate, title, authToken);
 
-    console.log(setData);    
+    console.log(set);    
 })();
