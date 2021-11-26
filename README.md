@@ -7,13 +7,13 @@ The documentation can be found [here](https://github.com/glixzzy/blooket-wrapper
 # Usage
 
 ```js
-const Blooket = require('blooket');
+const Blooket = require('blooket')
 
 const client = new Blooket();
 
-client.floodGames('696185', 100);
+client.joinGame('342865', 'twst', 'Dog')
 
-client.on('flood', data => {
-    console.log('Joined game with name: ' + data.player);
+client.on('Joined', data => {
+    console.log(`Joined game with name: ${data.name} \nJoined game with blook: ${data.blook}`)
 });
 ```

@@ -8,7 +8,7 @@ Documentation for the node.js Blooket library
 - [Functions](https://github.com/glixzzy/blooket-wrapper/blob/main/Documention.md#functions)
 - [Events](https://github.com/glixzzy/blooket-wrapper/blob/main/Documention.md#events)
 
-### Basic Usage
+### Usage
 ```js
 const Blooket = require('blooket')
 
