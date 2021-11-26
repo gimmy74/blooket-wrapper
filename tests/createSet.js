@@ -3,14 +3,12 @@ const Blooket = require('../index')
 const client = new Blooket();
 
 (async () => {
-    const login = client.login('email', 'passwod');
-    const loginData = await login;
-    const authToken = loginData.token;
+    const login = await client.login('email', 'passwod');
+    const authToken = login.token;
 
-    const account = client.getAccountData(authToken);
-    const accountData = await account;
+    const account = await client.getAccountData(authToken);
 
-    const author = accountData.name;
+    const author = account.name;
     const desc = 'created from nodejs';
     const isPrivate = false;
     const title = 'created from nodejs';

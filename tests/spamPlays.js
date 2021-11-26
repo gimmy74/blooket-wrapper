@@ -3,15 +3,13 @@ const Blooket = require('../index')
 const client = new Blooket();
 
 (async () => {
-    const login = client.login('email', 'password');
-    const loginData = await login;
-    const authToken = loginData.token;
+    const login = await client.login('email', 'password');
+    const authToken = login.token;
 
-    const account = client.getAccountData(authToken);
-    const accountData = await account;
+    const account = await client.getAccountData(authToken);
     
     const setId = "619ffd8626263900c33b3db8";
-    const name = accountData.name;
+    const name = account.name;
 
 
     client.spamPlayGame(setId, name, authToken, 100);

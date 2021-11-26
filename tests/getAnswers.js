@@ -5,15 +5,13 @@ const client = new Blooket();
 (async () => {
     const gamePin = "198804";
 
-    const game = client.getGameData(gamePin)
-    const gameData = await game;
+    const game = await client.getGameData(gamePin)
 
-    const set = gameData.host.set;
+    const set = game.host.set;
 
-    const answers = client.getAnswers(set);
-    const answersData = await answers;
+    const answers = await client.getAnswers(set);
     
-    answersData.forEach(data => {
-        console.log(data);
+    answers.forEach(answer => {
+        console.log(answer);
     });
 })();
