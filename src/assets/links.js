@@ -10,6 +10,13 @@ module.exports = {
         favorite: "https://api.blooket.com/api/users/updatefavorites",
         games: "https://api.blooket.com/api/games",
         gameQuery: "https://api.blooket.com/api/games?gameId=",
-        login: "https://api.blooket.com/api/users/login"
+        login: "https://api.blooket.com/api/users/login",
+        homeWorkQuery: "https://api.blooket.com/api/homeworks?id=",
+        homeworks: "https://api.blooket.com/api/users/homeworks",
+        histories: "https://api.blooket.com/api/users/histories",
+        blooks: "https://api.blooket.com/api/users/blooks",
+        tokens: "https://api.blooket.com/api/users/tokens",
+        users: "https://api.blooket.com/api/users",
+        userQuery: "https://api.blooket.com/api/users?name="
     },
 };
