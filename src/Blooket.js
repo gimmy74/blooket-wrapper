@@ -19,12 +19,26 @@ const getGameData = require('./utils/getGameData');
 const isFavorited = require('./utils/isFavorited');
 const getRandomBlook = require('./utils/getRandomBlook');
 
+
+/**
+ * new Blooket
+ * @class
+ * @classdesc Game manipulation & normal API usage
+ */
 class Blooket extends EventEmitter {
     constructor() {
         super();
     };
 
     /* Global */
+
+    /**
+     * 
+     * @function joinGame
+     * @param {string} gamePin - Game pin used to enter in a game
+     * @param {string} botName - Name used to join a game
+     * @param {string} blook - Blook chosed to play with in a game
+     */
 
     async joinGame(gamePin, botName, blook) {
         const socketAuthToken = await verifyToken(gamePin, botName);
@@ -53,6 +67,13 @@ class Blooket extends EventEmitter {
         this.emit('Joined', data);
     };
 
+    /**
+     * 
+     * @function floodGames
+     * @param {string} gamePin - Game pin used to enter in a game
+     * @param {number} amount - Amount of bots you want to flood the game
+     */
+
     async floodGames(gamePin, amount) {
 
         if (amount > 100) /* only change this if statement if you know what you're doing but strongly suggested not to change. */ {
@@ -80,6 +101,17 @@ class Blooket extends EventEmitter {
             this.emit('flood', { player: botName });
         };
     };
+
+    /**
+     * 
+     * @function createGame
+     * @param {string} hostName - Your Blooket name
+     * @param {boolean} isPlus - Is your account plus?
+     * @param {string} qSetId - Game Set Id
+     * @param {t_a} t_a - t = True | a = Amount
+     * @param {string} gameMode - Gold, Crypto, and etc.
+     * @param {string} authToken - Your auth token is like your login info
+     */
 
     async createGame(hostName, isPlus, qSetId, t_a /* t_a = Time or Amount*/, gameMode, authToken) {
         const newDateISOString = new Date().toISOString();
@@ -124,6 +156,13 @@ class Blooket extends EventEmitter {
         this.emit('gameCreated', data);
     };
 
+    /**
+     * 
+     * @function getAccountData
+     * @param {string} authToken - Your auth token is like your login info
+     * @returns {Promise} Returns response data
+     */
+
     async getAccountData(authToken) {
         const modifiedAuthToken = authToken.split('JWT ')[1];
 
@@ -131,6 +170,13 @@ class Blooket extends EventEmitter {
 
         return response.data
     };
+
+    /**
+     * 
+     * @function getGameData
+     * @param {string} gamePin - Game pin used to enter in a game 
+     * @returns {Promise} Returns response data
+     */
 
     async getGameData(gamePin) {
         checkPinType(gamePin);
@@ -155,8 +201,21 @@ class Blooket extends EventEmitter {
         };
     };
 
-    async getAnswers(setId) {
-        const response = await axios(utils.links.gameQuery + setId, {}, {
+    /**
+     * 
+     * @function getAnswers
+     * @param {string} gamePin - Game pin used to enter in a game 
+     * @returns {Promise} Returns response data
+     */
+
+    async getAnswers(gamePin) {
+        checkPinType(gamePin);
+
+        const botName = "hecker" + Math.floor(100 + Math.random() * 900).toString();
+
+        const game = await getGameData(gamePin, botName);
+        
+        const response = await axios(utils.links.gameQuery + game.host.set, {}, {
             headers: {
                 Referer: 'https://www.blooket.com/',
             },
@@ -170,6 +229,15 @@ class Blooket extends EventEmitter {
 
         return data
     };
+
+    /**
+     * 
+     * @function spamPlayGame
+     * @param {string} setId - Game Set Id
+     * @param {string} name - BLooket account name
+     * @param {string} authToken - Your Blooket auth token is like your login info
+     * @param {number} amount - Amount of plays you want
+     */
 
     async spamPlayGame(setId, name, authToken, amount) {
         for (let i = 0; i < amount; i++) {
@@ -196,6 +264,15 @@ class Blooket extends EventEmitter {
         };
     };
 
+    /**
+     * 
+     * @function favoriteSet
+     * @param {string} setId - Game Set Id
+     * @param {string} name - Blooket account name
+     * @param {string} authToken - Your blooket auth token is like your login info
+     * @returns {Promise} Returns response data
+     */
+
     async favoriteSet(setId, name, authToken) {
         const checkIfFavorited = await isFavorited(setId, authToken);
 
@@ -216,6 +293,17 @@ class Blooket extends EventEmitter {
         };
     };
 
+    /**
+     * 
+     * @function createSet
+     * @param {string} author - Blooket account name 
+     * @param {string} description - Description about the set
+     * @param {boolean} isPrivate - Make the set private?
+     * @param {string} title - Title of the set
+     * @param {string} authToken - Your blooket auth token is like your login info
+     * @returns {Promise} Returns response data
+     */
+
     async createSet(author, description, isPrivate, title, authToken) {
         const response = await axios.post(utils.links.games, {
             author: author,
@@ -232,6 +320,16 @@ class Blooket extends EventEmitter {
         return response.data
     };
 
+    /**
+     * 
+     * @function addTokens
+     * @param {number} tokenAmount - Amount of tokens you want
+     * @param {number} xpAmount - Amount of XP you want
+     * @param {string} name - Blooket account name
+     * @param {string} authToken 
+     * @returns {Promise} Returns response data
+     */
+
     async addTokens(tokenAmount, xpAmount, name, authToken) {
         const response = await axios.put(utils.links.rewards, {
             addedTokens: tokenAmount,
@@ -245,6 +343,14 @@ class Blooket extends EventEmitter {
 
         return response.data
     };
+
+    /**
+     * 
+     * @function login
+     * @param {string} email - Blooket email used to login
+     * @param {string} password - Blooket password used to login
+     * @returns {Promise} Returns response data
+     */
 
     async login(email, password) {
         const response = await axios.post(utils.links.login, {
@@ -265,9 +371,149 @@ class Blooket extends EventEmitter {
         return response.data
     };
 
+    /**
+     * 
+     * @function getHistories
+     * @param {string} authToken - Your Blooket auth token is like your login info 
+     * @returns {Promise} Returns response data
+     */
+
+    async getHistories(authToken) {
+        const response = await axios(utils.links.histories, {
+            headers: {
+                authorization: authToken,
+            },
+        });
+
+        return response.data
+    };
+
+    /**
+     * 
+     * @function getHomeworks
+     * @param {string} authToken - Your Blooket auth token is like your login info 
+     * @returns {Promise} Returns response data
+     */
+
+    async getHomeworks(authToken) {
+        const response = await axios(utils.links.homeworks, {
+            headers: {
+                authorization: authToken,
+            },
+        });
+
+        return response.data
+    };
+
+    /**
+     * 
+     * @function deleteHomework
+     * @param {setId} setId - Game Set Id
+     * @param {string} authToken - Your Blooket auth token is like your login info 
+     * @returns {Promise} Returns response data
+     */
+
+    async deleteHomework(setId, authToken) {
+        try {
+            const response = await axios.delete(utils.links.homeWorkQuery + setId, {
+                headers: {
+                    authorization: authToken,
+                },
+            });
+
+            return response.data
+        } catch (e) {
+            if (e.response.status == 404) {
+                throw new Error(e.response.data);
+            };
+        };
+    };
+
+    /**
+     * 
+     * @function getBlooks
+     * @param {string} authToken - Your Blooket auth token is like your login info 
+     * @returns {Promise} Returns response data
+     */
+
+    async getBlooks(authToken) {
+        const response = await axios(utils.links.blooks, {
+            headers: {
+                authorization: authToken,
+            },
+        });
+
+        return response.data
+    };
+
+    /**
+     * 
+     * @function getTokens
+     * @param {string} authToken - Your Blooket auth token is like your login info 
+     * @returns {Promise} Returns response data
+     */
+
+    async getTokens(authToken) {
+        const response = await axios(utils.links.tokens, {
+            headers: {
+                authorization: authToken,
+            },
+        });
+
+        return response.data
+    };
+
+    /**
+     * 
+     * @function getStats
+     * @param {string} authToken - Your Blooket auth token is like your login info 
+     * @returns {Promise} Returns response data
+     */
+
+    async getStats(authToken) {
+        const response = await axios(utils.links.users, {
+            headers: {
+                authorization: authToken,
+            },
+        });
+
+        return response.data
+    };
+
+    /**
+     * 
+     * @function getUserData
+     * @param {string} name - Blooket account name
+     * @param {string} authToken - Your Blooket auth token is like your login info 
+     * @returns {Promise} Returns response data
+     */
+
+    async getUserData(name, authToken) {
+        try {
+            const response = await axios(utils.links.userQuery + name, {
+                headers: {
+                    authorization: authToken,
+                },
+            });
+
+            return response.data
+        } catch (e) {
+            if (e.response.status == 404) {
+                throw new Error(e.response.data);
+            };
+        };
+    };
+
     /* Global End */
 
     /* Gold Quest */
+
+    /**
+     * 
+     * @function stealGold
+     * @param {string} gamePin - Game pin used to enter a game
+     * @param {string} victimName - Player name you want to steal gold from
+     */
 
     async stealGold(gamePin, victimName) {
         const botName = "hecker" + Math.floor(100 + Math.random() * 900).toString();
@@ -297,6 +543,13 @@ class Blooket extends EventEmitter {
 
         this.emit('goldStolen', { player: victimName });
     };
+
+    /**
+     * 
+     * @function giveGold
+     * @param {string} gamePin - Game pin used to enter a game
+     * @param {string} victimName - Player name you want to steal gold from
+     */
 
     async giveGold(gamePin, victimName) {
         const botName = "hecker" + Math.floor(100 + Math.random() * 900).toString();
@@ -329,6 +582,12 @@ class Blooket extends EventEmitter {
     /* Gold Quest End */
 
     /* Racing */
+    
+    /**
+     * 
+     * @function endGame
+     * @param {string} gamePin - Game pin used to enter a game
+     */
 
     async endGame(gamePin) {
         const botName = "hecker" + Math.floor(100 + Math.random() * 900).toString();
