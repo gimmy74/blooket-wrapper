@@ -8,7 +8,7 @@ The documentation can be found [here](https://github.com/glixzzy/blooket-wrapper
 ## Installation
 
 ```sh-session
-npm install discord.js
+npm install blooket
 ```
 
 # Usage
