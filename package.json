@@ -1,7 +1,7 @@
 {
   "name": "blooket",
   "version": "1.0.7",
-  "description": "Blooket API wrapper",
+  "description": "A node.js wrapper for the Blooket API",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
