@@ -512,12 +512,13 @@ const client = new Blooket();
 })();
 ```
 
-- **``giveGold(gamePin, playerName)``**
+- **``giveGold(gamePin, playerName, goldAmount)``**
 ### Parameters:
 | name | description |
 |-|-|
 |*gamePin*|Game pin used to join a game with - **String**|
 |*playName*|Player name to give gold to - **String**|
+|*goldAmount*|Amount of gold to give to a player - **Number**|
 
 **Note: This function only works for gold quest game mode!**
 
@@ -527,19 +528,20 @@ const Blooket = require('blooket');
 
 const client = new Blooket();
 
-client.giveGold('189789', 'glizzy');
+client.giveGold('211958', 'wmaifa', 92191);
 
 client.on('goldGiven', data => {
     console.log('Gold given to player: ' + data.player);
 });
 ```
 
-- **``stealGold(gamePin, playerName)``**
+- **``stealGold(gamePin, playerName, goldAmount)``**
 ### Parameters:
 | name | description |
 |-|-|
 |*gamePin*|Game pin used to join a game with - **String**|
 |*playName*|Player name to steal gold from - **String**|
+|*goldAmount*|Amount of gold to steal - **String**|
 
 **Note: This function only works for gold quest game mode!**
 
@@ -549,7 +551,7 @@ const Blooket = require('blooket');
 
 const client = new Blooket();
 
-client.stealGold('773710', 'glixzzy');
+client.stealGold('211958', 'wmaifa', 1000);
 
 client.on('goldStolen', data => {
     console.log('Gold stolen from player: ' + data.player);
