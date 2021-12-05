@@ -1,6 +1,6 @@
 {
   "name": "blooket",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "A node.js wrapper for the Blooket API",
   "main": "index.js",
   "scripts": {
@@ -15,15 +15,16 @@
   },
   "keywords": [
     "Blooket",
-    "Blooket API wrapper",
+    "Blooket api wrapper",
     "Blooket hack",
     "Blooket docs",
-    "Blooket API docs",
+    "Blooket api docs",
     "Blooket nodejs",
     "Blooket.js",
-    "blooket js",
+    "blooket-js",
     "blooket api",
-    "blooket api docs"
+    "blooket api docs",
+    "blooket npm"
   ],
   "repository": {
     "type": "git",
