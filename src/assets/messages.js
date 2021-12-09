@@ -1,5 +1,5 @@
 module.exports = {
-    joinMessage: (gamePin, botName, blook) => {
+    join: (gamePin, botName, blook) => {
         return JSON.stringify({ "t": "d", "d": { "r": 2, "a": "p", "b": { "p": "/" + gamePin + "/c/" + botName, "d": { "b": blook } } } });
     },
 
@@ -7,8 +7,14 @@ module.exports = {
         return JSON.stringify({ "t": "d", "d": { "r": 1, "a": "auth", "b": { "cred": authToken } } })
     },
 
+    live: {
+        createGame: (gamePin, hostName, isPlus, newDateISOString, t_a, gameMode, qSetId) => {
+            return JSON.stringify({ "t": "d", "d": { "r": 3, "a": "p", "b": { "p": "/" + gamePin, "d": { "ho": hostName, "p": isPlus, "s": { "d": newDateISOString, "la": true, "m": t_a, "t": gameMode }, "set": qSetId, "stg": "join" } } } })
+        },
+    },
+
     gold: {
-        joinMessage: (gamePin, botName, blook) => {
+        join: (gamePin, botName, blook) => {
             return JSON.stringify({ "t": "d", "d": { "r": 6, "a": "p", "b": { "p": `/` + gamePin + `/c/` + botName, "d": { "b": blook, "g": 999999 } } } })
         },
 
