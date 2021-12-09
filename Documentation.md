@@ -10,14 +10,14 @@ Documentation for the node.js Blooket library
 
 ### Usage
 ```js
-const Blooket = require('blooket')
+const Blooket = require('blooket');
 
 const client = new Blooket();
 
-client.joinGame('342865', 'twst', 'Dog')
+client.joinGame('922159', 'glixzzy', 'Dog')
 
 client.on('Joined', data => {
-    console.log(`Joined game with name: ${data.name} \nJoined game with blook: ${data.blook}`)
+    console.log(data);
 });
 ```
 
@@ -160,7 +160,7 @@ const client = new Blooket();
 })();
 ```
 
-- **``floodGames(gamePin, amount)``**
+- **``floodGame(gamePin, amount)``**
 ### Parameters:
 | name | description |
 |-|-|
@@ -173,7 +173,7 @@ const Blooket = require('blooket')
 
 const client = new Blooket();
 
-client.floodGames('972506', 100);
+client.floodGame('922159', 100)
 
 client.on('flood', data => {
     console.log('Joined game with name: ' + data.player);
@@ -512,6 +512,67 @@ const client = new Blooket();
 })();
 ```
 
+- **`openBox(box, name, authToken)`**
+
+**Returns `Promise`**
+
+### Parameters:
+| name | description |
+|-|-|
+|*box*|The name of the box you want to open - **String**|
+|*name*|your blooket name - **String**|
+|*blooketAuthToken*|Your auth token is like your login info - **String**|
+
+Example:
+```js
+const Blooket = require('blooket');
+
+const client = new Blooket();
+
+(async () => {
+    const login = await client.login('email', 'password');
+    const authToken = login.token;
+    const name = login.user.name
+    
+    const box = 'Bot'
+
+    const openBox = await client.openBox(box, name, authToken);
+
+    console.log(openBox);
+})();
+```
+
+- **``sellBlook(blook, name, numSold)``**
+
+**Returns `Promise`**
+
+### Parameters:
+| name | description |
+|-|-|
+|*blook*|The name of the blook you want to tell - **String**|
+|*name*|your blooket name - **String**|
+|*numSold*|Your auth token is like your login info - **Number**|
+
+Example:
+```js
+const Blooket = require('blooket');
+
+const client = new Blooket();
+
+(async () => {
+    const login = await client.login('email', 'password');
+    const authToken = login.token;
+    const name = login.user.name
+    
+    const blook = 'Crab'
+    const numSold = 1
+
+    const sell = await client.sellBlook(blook, name, numSold, authToken);
+
+    console.log(sell);
+})();
+```
+
 - **``giveGold(gamePin, playerName, goldAmount)``**
 ### Parameters:
 | name | description |
@@ -585,9 +646,9 @@ client.on('gameEnded', data => {
 - Emitted when the client creates a live game.
     - Returns an `Object`
 
-`flood` - [floodGames()](https://github.com/glixzzy/blooket-wrapper/blob/main/Documentation.md#parameters-5)
+`flood` - [floodGame()](https://github.com/glixzzy/blooket-wrapper/blob/main/Documentation.md#parameters-5)
 
-- Emitted when the client flood a game.
+- Emitted when the client floods a game.
     - Returns an `Object`
 
 `Joined` - [joinGame()](https://github.com/glixzzy/blooket-wrapper/blob/main/Documentation.md#parameters-7)
