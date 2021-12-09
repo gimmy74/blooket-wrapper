@@ -1,6 +1,7 @@
 module.exports = {
     links: {
         join: "https://api.blooket.com/api/firebase/join",
+        joinQuery: "https://api.blooket.com/api/firebase/id?id=",
         live: "https://api.blooket.com/api/firebase/live",
         verify: "https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyCustomToken?key=AIzaSyCA-cTOnX19f6LFnDVVsHXya3k6ByP_MnU",
         verifyAcc: "https://api.blooket.com/api/users/verify-token?token=JWT+",
@@ -17,6 +18,8 @@ module.exports = {
         blooks: "https://api.blooket.com/api/users/blooks",
         tokens: "https://api.blooket.com/api/users/tokens",
         users: "https://api.blooket.com/api/users",
-        userQuery: "https://api.blooket.com/api/users?name="
+        userQuery: "https://api.blooket.com/api/users?name=",
+        unlock: "https://api.blooket.com/api/users/unlockblook",
+        sell: "https://api.blooket.com/api/users/sellblook"
     },
 };
