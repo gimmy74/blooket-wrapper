@@ -4,7 +4,6 @@ const utils = require('../assets/links');
 
 async function isFavorited(setId, authToken) {
     const response = await axios(utils.links.isFavorited + setId, {
-        method: "GET",
         headers: {
             authorization: authToken,
         },
