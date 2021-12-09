@@ -1,13 +1,21 @@
+const errors = require('./errors');
+
 function checkPinType(gamePin) {
     if (typeof gamePin == 'number') {
-        throw new TypeError('gamePin must be a string!')
+        throw new TypeError(errors.typeofs.gamePin)
     };
 };
 
 function checkNameType(name) {
     if (typeof name != 'string') {
-        throw new TypeError('name must be a string!');
+        throw new TypeError(errors.typeofs.name);
     };
 };
 
-module.exports = { checkPinType, checkNameType };
+function checkAmountType(amount) {
+    if (typeof amount != 'number') {
+        throw new TypeError(errors.typeofs.amount);
+    };
+}
+
+module.exports = { checkPinType, checkNameType, checkAmountType };
