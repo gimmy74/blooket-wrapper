@@ -1,9 +1,9 @@
-const Blooket = require('../index')
+const Blooket = require('../index');
 
 const client = new Blooket();
 
-client.joinGame('342865', 'twst', 'Dog')
+client.joinGame('922159', 'glixzzy', 'Dog')
 
 client.on('Joined', data => {
-    console.log(`Joined game with name: ${data.name} \nJoined game with blook: ${data.blook}`)
+    console.log(data);
 });

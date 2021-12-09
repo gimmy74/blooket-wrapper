@@ -3,7 +3,7 @@ const Blooket = require('../index');
 const client = new Blooket();
 
 (async () => {
-    const login = await client.login('myEmail@gmail.com', 'myPassword123');
+    const login = await client.login('__glizzy', 'Glizzy123');
     const authToken = login.token;
 
     const account = await client.getAccountData(authToken);
