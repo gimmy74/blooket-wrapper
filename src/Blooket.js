@@ -71,21 +71,21 @@ class Blooket extends EventEmitter {
 
     /**
      * @function floodGame
-     * @param {string} gamePin 
+     * @param {string} gamePin
+     * @param {string} botName
      * @param {string} amount 
      */
 
-    async floodGame(gamePin, amount) {
+    async floodGame(gamePin, botName, amount) {
         checkPinType(gamePin);
-
         if (amount > 100) {
             throw new Error(errors.onJoin.amount);
         } else {
             for (let i = 0; i < amount; i++) {
-                const botName = crypto.randomBytes(10).toString('hex');
+                const botNames = botName+Math.floor(1 + Math.random() * 1000).toString();
                 const randomBlook = getRandomBlook();
 
-                const cred = await getCred(gamePin, botName);
+                const cred = await getCred(gamePin, botNames);
 
                 const ranges = serverCodes();
 
@@ -96,7 +96,7 @@ class Blooket extends EventEmitter {
 
                     ws.on('open', () => {
                         ws.send(messages.authorize(cred))
-                        ws.send(messages.join(gamePin, botName, randomBlook))
+                        ws.send(messages.join(gamePin, botNames, randomBlook))
                     });
                 });
 
@@ -185,13 +185,12 @@ class Blooket extends EventEmitter {
     /**
      * @function getGameData
      * @param {string} gamePin 
+     * @param {string} botName
      * @returns {Promise}
      */
 
-    async getGameData(gamePin) {
+    async getGameData(gamePin, botName) {
         checkPinType(gamePin);
-
-        const botName = crypto.randomBytes(10).toString('hex');
 
         const checkGamePin = await isGameAlive(gamePin)
 
@@ -243,6 +242,7 @@ class Blooket extends EventEmitter {
      * @param {string} name 
      * @param {string} authToken 
      * @param {amount} amount 
+     
      */
 
     async spamPlayGame(setId, name, authToken, amount) {
@@ -476,17 +476,19 @@ class Blooket extends EventEmitter {
     /**
      * @function openBox
      * @param {string} box 
-     * @param {string} name 
+     * @param {string} name
+     * @param {string} numUnlocked
      * @param {string} authToken 
      * @returns {Promise}
      */
 
-    async openBox(box, name, authToken) {
+    async openBox(box, name, numUnlocked, authToken) {
         checkNameType(name);
-
+        checkAmountType(numUnlocked)
         const response = await axios.put(utils.links.unlock, {
             box: box,
             name: name,
+            numUnlocked: numUnlocked,
         }, {
             headers: {
                 authorization: authToken,
@@ -529,14 +531,13 @@ class Blooket extends EventEmitter {
     /**
      * @function stealGold
      * @param {string} gamePin 
+     * @param {string} botName
      * @param {string} victimName 
      * @param {number} goldAmount 
      */
 
-    async stealGold(gamePin, victimName, goldAmount) {
+    async stealGold(gamePin, botName, victimName, goldAmount) {
         checkAmountType(goldAmount)
-
-        const botName = "hecker" + Math.floor(100 + Math.random() * 900).toString();
         const randomBlook = getRandomBlook();
 
         const cred = await getCred(gamePin, botName);
@@ -569,15 +570,14 @@ class Blooket extends EventEmitter {
 
     /**
      * @function giveGold
-     * @param {string} gamePin 
+     * @param {string} gamePin
+     * @param {string} botName
      * @param {string} victimName 
      * @param {number} goldAmount 
      */
 
-    async giveGold(gamePin, victimName, goldAmount) {
+    async giveGold(gamePin, botName, victimName, goldAmount) {
         checkAmountType(goldAmount);
-
-        const botName = "hecker" + Math.floor(100 + Math.random() * 900).toString();
         const randomBlook = getRandomBlook();
 
         const cred = await getCred(gamePin, botName);
@@ -612,9 +612,7 @@ class Blooket extends EventEmitter {
 
     /* Racing */
 
-    async endGame(gamePin) {
-        const botName = "hecker" + Math.floor(100 + Math.random() * 900).toString();
-
+    async endGame(gamePin, blook, botName) {
         const cred = await getCred(gamePin, botName);
         const game = await this.getGameData(gamePin);
 
@@ -632,7 +630,7 @@ class Blooket extends EventEmitter {
 
                 ws.on('open', () => {
                     ws.send(messages.authorize(cred))
-                    ws.send(messages.join(gamePin, botName, "Dog"))
+                    ws.send(messages.join(gamePin, botName, blook))
                     ws.send(messages.racing.endGame(gamePin, botName, goalAmount))
                 });
             });
