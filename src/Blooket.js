@@ -642,6 +642,78 @@ class Blooket extends EventEmitter {
     };
 
     /* Racing End */
+    
+    /* Santas workshop */
+
+    async giveToys(gamePin, victimName, toyAmount) {
+        checkAmountType(toyAmount);
+        const botName = "hecker" + Math.floor(100 + Math.random() * 900).toString();
+        const randomBlook = getRandomBlook();
+
+        const cred = await getCred(gamePin, botName);
+        const game = await this.getGameData(gamePin);
+
+        const names = Object.keys(game.host.c)
+
+        if (!names.includes(victimName)) throw new Error(victimName + " " + errors.toy.playerExists);
+
+        const ranges = serverCodes();
+
+        if (game.host.s.t != "Toy") {
+            throw new Error(errors.toy.func);
+        } else {
+            ranges.forEach(async range => {
+                const socketUrl = await findSocketUri(range.code);
+
+                const ws = new WebSocket(socketUrl);
+
+                ws.on('open', () => {
+                    ws.send(messages.authorize(cred))
+                    ws.send(messages.toy.join(gamePin, botName, randomBlook))
+                    ws.send(messages.toy.give(gamePin, botName, randomBlook, victimName, toyAmount))
+                });
+            });
+
+            this.emit('toysGiven', { player: victimName });
+        };
+    };
+
+    async stealToys(gamePin, victimName, toyAmount) {
+        checkAmountType(toyAmount)
+        
+        const botName = "hecker" + Math.floor(100 + Math.random() * 900).toString();
+        const randomBlook = getRandomBlook();
+
+        const cred = await getCred(gamePin, botName);
+        const game = await this.getGameData(gamePin);
+
+        const names = Object.keys(game.host.c);
+
+        if (!names.includes(victimName)) throw new Error(victimName + " " + errors.toy.playerExists);
+
+        const ranges = serverCodes();
+
+        if (game.host.s.t != "Toy") {
+            throw new Error(errors.toy.func);
+        } else {
+            ranges.forEach(async range => {
+                const socketUrl = await findSocketUri(range.code);
+
+                const ws = new WebSocket(socketUrl);
+
+                ws.on('open', () => {
+                    ws.send(messages.authorize(cred))
+                    ws.send(messages.toy.join(gamePin, botName, randomBlook))
+                    ws.send(messages.toy.steal(gamePin, botName, randomBlook, victimName, toyAmount))
+                });
+            });
+
+            this.emit('toysStolen', { player: victimName });
+        };
+    };
+    
+  /* Santas Workshop End */
+    
 };
 
 module.exports = Blooket
