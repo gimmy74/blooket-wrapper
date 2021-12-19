@@ -27,6 +27,21 @@ module.exports = {
         },
     },
 
+    toy: {
+       join: (gamePin, botName, blook) => {
+            return JSON.stringify({ "t": "d", "d": { "r": 6, "a": "p", "b": { "p": `/` + gamePin + `/c/` + botName, "d": { "b": blook, "t": 9999999999 } } } })
+        },
+
+       steal: (gamePin, botName, randomBlook, victimName, toyAmount) => {
+            return JSON.stringify({ "t": "d", "d": { "r": 18, "a": "p", "b": { "p": "/" + gamePin + "/c/" + botName, "d": { "b": randomBlook, "g": 0, "tat": victimName + ":" + toyAmount } } } })
+        },
+
+        give: (gamePin, botName, randomBlook, victimName, toyAmount) => {
+            return JSON.stringify({ "t": "d", "d": { "r": 18, "a": "p", "b": { "p": "/" + gamePin + "/c/" + botName, "d": { "b": randomBlook, "g": 0, "tat": victimName + ":swap:" + toyAmount } } } })
+        },
+    },
+
+
     racing: {
         endGame: (gamePin, botName, goalAmount) => {
             return JSON.stringify({ "t": "d", "d": { "r": 12, "a": "p", "b": { "p": "/" + gamePin + "/c/" + botName, "d": { "b": "Dog", "pr": goalAmount } } } })
