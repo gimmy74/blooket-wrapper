@@ -23,6 +23,11 @@ module.exports = {
         func: "This function only works in a gold quest game mode!"
     },
 
+    toy: {
+       playerExist: "Player does not exist",
+       func: "This fuction only works in the Santa's Workshop game mode!"
+    },
+
     racing: {
         func: "This function is only supposed to be used in racing game mode!"
     }
